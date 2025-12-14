@@ -1,18 +1,14 @@
 const nodemailer = require('nodemailer');
 
-// CORS headers
-const headers = {
-  'Access-Control-Allow-Origin': 'https://webtibcon.web.app',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Content-Type': 'application/json'
-};
-
 module.exports = async (req, res) => {
+  // CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    res.status(200).set(headers).end();
-    return;
+    return res.status(200).end();
   }
 
   // Only POST allowed
@@ -31,14 +27,14 @@ module.exports = async (req, res) => {
     // Create SMTP transporter
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT),
-      secure: false, // Port 587 = STARTTLS
+      port: parseInt(process.env.SMTP_PORT || '587'),
+      secure: false,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS
       },
       tls: {
-        rejectUnauthorized: false // Şirket sertifikası için
+        rejectUnauthorized: false
       }
     });
 
@@ -53,11 +49,6 @@ module.exports = async (req, res) => {
 
     console.log('Email sent:', info.messageId);
 
-    // Set headers manually for response
-    Object.entries(headers).forEach(([key, value]) => {
-      res.setHeader(key, value);
-    });
-
     return res.status(200).json({ 
       success: true, 
       messageId: info.messageId 
@@ -65,11 +56,6 @@ module.exports = async (req, res) => {
 
   } catch (error) {
     console.error('Email error:', error);
-    
-    Object.entries(headers).forEach(([key, value]) => {
-      res.setHeader(key, value);
-    });
-
     return res.status(500).json({ 
       error: 'Failed to send email', 
       details: error.message 
