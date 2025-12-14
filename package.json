@@ -1,15 +1,18 @@
 {
-  "name": "tibcon-email-api",
-  "version": "1.0.0",
-  "description": "SMTP Email API for TibconWeb",
-  "scripts": {
-    "dev": "vercel dev",
-    "deploy": "vercel --prod"
-  },
-  "dependencies": {
-    "nodemailer": "^6.9.7"
-  },
-  "devDependencies": {
-    "@vercel/node": "^3.0.0"
-  }
+    "name":  "tibcon-email-api",
+    "version":  "1.0.0",
+    "description":  "SMTP Email API for TibconWeb",
+    "scripts":  {
+                    "dev":  "vercel dev",
+                    "deploy":  "vercel --prod"
+                },
+    "dependencies":  {
+                         "nodemailer":  "^6.9.7"
+                     },
+    "devDependencies":  {
+                            "@vercel/node":  "^3.0.0"
+                        },
+    "engines":  {
+                    "node":  "18.x"
+                }
 }
